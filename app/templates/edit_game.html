@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Game</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body class="container mt-5" data-game-id="{{ game.id }}">
+
+    <h2>Edit Game</h2>
+
+    <form id="editGameForm" method="POST" action="/edit_game/{{ game.id }}">
+        <!-- Step 1: Worldview -->
+        <div class="step active" id="step-1">
+            <h4>Step 1: Worldview</h4>
+
+            <div class="mb-3">
+                <label>World Name</label>
+                <input type="text" class="form-control" name="world_name" value="{{ game.world_name }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label>Worldview and Genre</label>
+                <textarea class="form-control" name="world_genre" required>{{ game.world_genre }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label>Detail</label>
+                <textarea class="form-control" name="world_detail" required>{{ game.world_detail }}</textarea>
+            </div>
+
+            <button type="button" class="btn btn-primary" onclick="nextStep(2)">Next</button>
+        </div>
+
+        <!-- Step 2: NPCs -->
+        <div class="step" id="step-2">
+            <h4>Step 2: NPCs</h4>
+            <div id="npcContainer">
+                {% for npc in game.npcs %}
+                    <div class="card mb-3 p-3 border border-primary rounded">
+                        <h5>NPC {{ loop.index }}</h5>
+
+                        <div class="mb-3">
+                            <label>Name</label>
+                            <input type="text" class="form-control" name="npc_name[]" value="{{ npc.name }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Appearance</label>
+                            <input type="text" class="form-control" name="npc_appearance[]" value="{{ npc.appearance }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Characteristics</label>
+                            <input type="text" class="form-control" name="npc_characteristics[]" value="{{ npc.characteristics }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Back Story</label>
+                            <textarea class="form-control" name="npc_backstory[]" required>{{ npc.backstory }}</textarea>
+                        </div>
+
+                        <button type="button" class="btn btn-danger" onclick="removeNPC(this)">Delete NPC</button>
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="addNPC()">+ Add NPC</button>
+            <button type="button" class="btn btn-outline-dark" onclick="nextStep(1)">Back</button>
+            <button type="button" class="btn btn-primary" onclick="nextStep(3)">Next</button>
+        </div>
+
+        <!-- Step 3: Scenes -->
+        <div class="step" id="step-3">
+            <h4>Step 3: Scenes</h4>
+
+            <div class="mb-3">
+                <label>Prologue</label>
+                <textarea class="form-control" name="scene_prologue" required>{{ game.scene_prologue }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label>Opening Line</label>
+                <textarea class="form-control" name="scene_opening_line" required>{{ game.scene_opening_line }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label>Goal</label>
+                <input type="text" class="form-control" name="scene_goal" value="{{ game.scene_goal }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label>Fail When</label>
+                <input type="text" class="form-control" name="scene_fail_when" value="{{ game.scene_fail_when }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label>Ending Line</label>
+                <textarea class="form-control" name="scene_ending_line" required>{{ game.scene_ending_line }}</textarea>
+            </div>
+
+            <button type="button" class="btn btn-outline-dark" onclick="nextStep(2)">Back</button>
+            <button type="submit" class="btn btn-success">Save Changes</button>
+        </div>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/edit_game.js') }}"></script>
+</body>
+
+</html>
